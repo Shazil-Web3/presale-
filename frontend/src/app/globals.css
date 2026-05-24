@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08080a;
+  --surface: #14141a;
+  --foreground: #f5f7f7;
+  --muted-foreground: #a9acb3;
+  --acid-lime: #ccff00;
+  --liquidity-emerald: #00ff87;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-acid-lime: var(--acid-lime);
+  --color-liquidity-emerald: var(--liquidity-emerald);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.quantum-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 20, 26, 0.88) 0%,
+    rgba(8, 8, 10, 0.92) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.quantum-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.quantum-glow {
+  box-shadow:
+    0 0 40px rgba(204, 255, 0, 0.16),
+    inset 0 0 20px rgba(0, 255, 135, 0.08);
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.6;
+  }
+}
+
+.text-gradient-lime {
+  background: linear-gradient(to right, var(--acid-lime), var(--liquidity-emerald));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, var(--acid-lime) 0%, var(--liquidity-emerald) 100%);
+  color: #08080a;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  border-color: rgba(204, 255, 0, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Lenis Smooth Scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "BitRaxx",
+  "short_name": "BitRaxx",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080a",
+  "theme_color": "#ccff00",
+  "icons": [
+    {
+      "src": "/file.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
