@@ -117,9 +117,9 @@ function AboutHero() {
             <Link href="/dashboard" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold shadow-[0_0_20px_rgba(204,255,0,0.3)]">
               Explore Ecosystem <ArrowRight className="h-4 w-4" />
             </Link>
-            <button className="glass inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
+            <Link href="/about" className="glass inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
               <FileText className="h-4 w-4" /> Whitepaper
-            </button>
+            </Link>
           </div>
         </motion.div>
       </div>

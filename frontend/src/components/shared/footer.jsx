@@ -11,10 +11,8 @@ export default function Footer() {
       { label: "Roadmap", href: "/roadmap" },
     ],
     resources: [
-      { label: "Whitepaper", href: "#" },
-      { label: "Documentation", href: "#" },
-      { label: "Security Audit", href: "#" },
-      { label: "Brand Kit", href: "#" },
+      { label: "Whitepaper", href: "/about" },
+      { label: "Documentation", href: "/about" },
     ],
     community: [
       { label: "Twitter", href: "https://twitter.com", icon: FaTwitter },

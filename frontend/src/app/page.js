@@ -121,9 +121,9 @@ function Hero() {
             <Link href="/dashboard" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold">
               Participate In Presale <ArrowRight className="h-4 w-4" />
             </Link>
-            <button className="glass inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
+            <Link href="/about" className="glass inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
               <FileText className="h-4 w-4" /> Whitepaper
-            </button>
+            </Link>
           </div>
 
           <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-8">

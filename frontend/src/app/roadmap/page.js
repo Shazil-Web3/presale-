@@ -426,9 +426,9 @@ function WhitepaperCTA() {
                 <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
                     Dive deep into our technical architecture, tokenomics model, and ecosystem strategy through the official BitRaxx whitepaper.
                 </p>
-                <button className="btn-gradient rounded-xl px-10 py-5 font-bold text-lg flex items-center gap-3 mx-auto shadow-[0_0_30px_rgba(204,255,0,0.2)]">
+                <Link href="/about" className="btn-gradient rounded-xl px-10 py-5 font-bold text-lg flex items-center gap-3 mx-auto shadow-[0_0_30px_rgba(204,255,0,0.2)] w-fit">
                     Download Whitepaper <ArrowRight className="h-5 w-5" />
-                </button>
+                </Link>
             </div>
         </section>
     );
