@@ -92,19 +92,24 @@ const BorderGlow = ({
   }, [getCenterOfElement]);
 
   const handlePointerMove = useCallback((e) => {
+    if (animated) return; // Skip manual logic if sweep animation is active
+    
     const card = cardRef.current;
     if (!card) return;
 
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Use requestAnimationFrame for smoother updates and to avoid layout thrashing
+    requestAnimationFrame(() => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    const edge = getEdgeProximity(card, x, y);
-    const angle = getCursorAngle(card, x, y);
+      const angle = getCursorAngle(card, x, y);
+      const proximity = getEdgeProximity(card, x, y);
 
-    card.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
-    card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
-  }, [getEdgeProximity, getCursorAngle]);
+      card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
+      card.style.setProperty('--edge-proximity', `${(proximity * 100).toFixed(3)}`);
+    });
+  }, [getCursorAngle, getEdgeProximity, animated]);
 
   useEffect(() => {
     if (!animated || !cardRef.current) return;

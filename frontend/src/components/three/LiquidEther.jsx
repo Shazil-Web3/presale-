@@ -592,10 +592,15 @@ export default function LiquidEther({
         this.scene.add(this.mouse);
       }
       update(props) {
-        const forceX = (Mouse.diff.x / 2) * props.mouse_force;
-        const forceY = (Mouse.diff.y / 2) * props.mouse_force;
-        const cursorSizeX = props.cursor_size * props.cellScale.x;
-        const cursorSizeY = props.cursor_size * props.cellScale.y;
+        // Optimized: only check mobile once per frame, or we could even cache it
+        const isMobile = window.innerWidth <= 768;
+        const mobileFactor = isMobile ? 0.35 : 1.0;
+        
+        const forceX = (Mouse.diff.x / 2) * props.mouse_force * mobileFactor;
+        const forceY = (Mouse.diff.y / 2) * props.mouse_force * mobileFactor;
+        const cursorScale = isMobile ? 0.8 : 1.0;
+        const cursorSizeX = props.cursor_size * props.cellScale.x * cursorScale;
+        const cursorSizeY = props.cursor_size * props.cellScale.y * cursorScale;
         const centerX = Math.min(
           Math.max(Mouse.coords.x, -1 + cursorSizeX + props.cellScale.x * 2),
           1 - cursorSizeX - props.cellScale.x * 2
@@ -607,7 +612,7 @@ export default function LiquidEther({
         const uniforms = this.mouse.material.uniforms;
         uniforms.force.value.set(forceX, forceY);
         uniforms.center.value.set(centerX, centerY);
-        uniforms.scale.value.set(props.cursor_size, props.cursor_size);
+        uniforms.scale.value.set(props.cursor_size * cursorScale, props.cursor_size * cursorScale);
         super.update();
       }
     }

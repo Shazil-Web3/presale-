@@ -138,10 +138,11 @@ function AboutBitRaxx() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
             <InteractiveOrb 
-                className="-top-24 -left-48"
-                color="rgba(0,255,135,0.25)"
+                initialX="10%" 
+                initialY="20%"
+                color="rgba(0,255,135,0.2)"
                 size="45rem"
-                opacity={0.8}
+                opacity={0.7}
             />
             
             <div className="mx-auto max-w-7xl relative z-10">
@@ -193,7 +194,8 @@ function PlatformVision() {
     return (
         <section className="relative px-6 py-32 overflow-hidden border-y border-white/5">
             <InteractiveOrb 
-                className="-top-24 -right-48"
+                initialX="90%" 
+                initialY="10%"
                 color="rgba(168,85,247,0.15)"
                 size="45rem"
                 opacity={0.6}
@@ -267,10 +269,11 @@ function CoreEcosystemFeatures() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
              <InteractiveOrb 
-                className="top-1/2 -left-48 -translate-y-1/2"
-                color="rgba(0,255,135,0.2)"
+                initialX="5%" 
+                initialY="50%"
+                color="rgba(0,255,135,0.15)"
                 size="40rem"
-                opacity={0.7}
+                opacity={0.6}
             />
              <div className="mx-auto max-w-7xl relative z-10">
                 <SectionHeader 
@@ -310,10 +313,18 @@ function MultiChainInfrastructure() {
     return (
         <section className="relative px-6 py-32 bg-white/[0.01] overflow-hidden">
             <InteractiveOrb 
-                className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                color="rgba(204,255,0,0.1)"
+                initialX="80%" 
+                initialY="20%"
+                color="rgba(168,85,247,0.25)"
+                size="45rem"
+                opacity={0.8}
+            />
+            <InteractiveOrb 
+                initialX="20%" 
+                initialY="80%"
+                color="rgba(204,255,0,0.2)"
                 size="50rem"
-                opacity={0.4}
+                opacity={0.7}
             />
             <div className="mx-auto max-w-7xl relative z-10 flex flex-col items-center">
                 <SectionHeader 
@@ -369,10 +380,11 @@ function SecurityArchitecture() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
             <InteractiveOrb 
-                className="bottom-0 -right-48"
-                color="rgba(168,85,247,0.2)"
+                initialX="95%" 
+                initialY="90%"
+                color="rgba(168,85,247,0.15)"
                 size="40rem"
-                opacity={0.8}
+                opacity={0.7}
             />
 
             <div className="mx-auto max-w-7xl relative z-10">
@@ -428,10 +440,18 @@ function FAQSection() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
             <InteractiveOrb 
-                className="top-1/2 -left-48 -translate-y-1/2"
-                color="rgba(0,255,135,0.15)"
+                initialX="90%" 
+                initialY="30%"
+                color="rgba(0,255,135,0.25)"
+                size="45rem"
+                opacity={0.8}
+            />
+            <InteractiveOrb 
+                initialX="10%" 
+                initialY="70%"
+                color="rgba(168,85,247,0.2)"
                 size="40rem"
-                opacity={0.6}
+                opacity={0.7}
             />
             <div className="mx-auto max-w-3xl relative z-10">
                 <SectionHeader 
@@ -475,10 +495,11 @@ function CommunityContact() {
         <section className="relative px-6 py-24 overflow-hidden">
              <div className="absolute inset-0 z-0">
                 <InteractiveOrb 
-                    className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    color="rgba(204,255,0,0.15)"
+                    initialX="45%" 
+                    initialY="55%"
+                    color="rgba(204,255,0,0.12)"
                     size="60rem"
-                    opacity={0.6}
+                    opacity={0.5}
                 />
              </div>
 

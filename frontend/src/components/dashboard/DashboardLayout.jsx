@@ -14,25 +14,28 @@ export default function DashboardLayout({ children, title, subtitle }) {
       {/* Decorative Background Orbs */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <InteractiveOrb 
-          color="rgba(204, 255, 0, 0.15)" 
+          color="rgba(204, 255, 0, 0.12)" 
           size={600} 
-          initialX="20%" 
-          initialY="20%" 
-          className="blur-[120px]"
+          initialX="15%" 
+          initialY="15%" 
+          blur="120px"
+          animated={false}
         />
         <InteractiveOrb 
-          color="rgba(168, 85, 247, 0.15)" 
+          color="rgba(168, 85, 247, 0.12)" 
           size={500} 
-          initialX="80%" 
-          initialY="70%" 
-          className="blur-[100px]"
+          initialX="85%" 
+          initialY="80%" 
+          blur="100px"
+          animated={false}
         />
         <InteractiveOrb 
-          color="rgba(0, 255, 135, 0.1)" 
-          size={400} 
-          initialX="50%" 
-          initialY="50%" 
-          className="blur-[80px]"
+          color="rgba(0, 255, 135, 0.08)" 
+          size={450} 
+          initialX="10%" 
+          initialY="75%" 
+          blur="90px"
+          animated={false}
         />
       </div>
 

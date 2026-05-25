@@ -118,16 +118,18 @@ function RoadmapTimeline() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
             <InteractiveOrb 
-                className="top-1/4 -left-48"
-                color="rgba(168,85,247,0.3)"
+                initialX="10%" 
+                initialY="25%"
+                color="rgba(168,85,247,0.2)"
                 size="45rem"
-                opacity={0.9}
+                opacity={0.8}
             />
             <InteractiveOrb 
-                className="bottom-1/4 -right-48"
-                color="rgba(204,255,0,0.3)"
+                initialX="90%" 
+                initialY="75%"
+                color="rgba(204,255,0,0.2)"
                 size="40rem"
-                opacity={0.9}
+                opacity={0.8}
             />
             <div className="mx-auto max-w-5xl relative z-10">
                 <SectionHeader 
@@ -180,16 +182,18 @@ function SaleStages() {
     return (
         <section className="relative px-6 py-24 bg-white/[0.02] overflow-hidden">
             <InteractiveOrb 
-                className="top-0 -left-48"
-                color="rgba(168,85,247,0.3)"
+                initialX="15%" 
+                initialY="10%"
+                color="rgba(168,85,247,0.2)"
                 size="35rem"
-                opacity={0.8}
+                opacity={0.7}
             />
             <InteractiveOrb 
-                className="bottom-0 -right-48"
-                color="rgba(0,255,135,0.35)"
+                initialX="85%" 
+                initialY="90%"
+                color="rgba(0,255,135,0.25)"
                 size="40rem"
-                opacity={0.9}
+                opacity={0.8}
             />
             <div className="mx-auto max-w-7xl relative z-10">
                 <SectionHeader 
@@ -235,16 +239,18 @@ function Tokenomics() {
     return (
         <section className="relative px-6 py-24 overflow-hidden">
              <InteractiveOrb 
-                className="top-0 -right-48"
-                color="rgba(168,85,247,0.3)"
+                initialX="90%" 
+                initialY="10%"
+                color="rgba(168,85,247,0.2)"
                 size="35rem"
-                opacity={0.8}
+                opacity={0.7}
             />
              <InteractiveOrb 
-                className="-bottom-32 -left-48"
-                color="rgba(0,255,135,0.35)"
+                initialX="10%" 
+                initialY="90%"
+                color="rgba(0,255,135,0.25)"
                 size="40rem"
-                opacity={0.9}
+                opacity={0.8}
             />
             
             <div className="mx-auto max-w-7xl relative z-10">

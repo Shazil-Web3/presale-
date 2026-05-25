@@ -79,6 +79,24 @@ function Hero() {
 
   return (
     <section id="home" className="relative min-h-[100svh] overflow-hidden px-6 flex items-center pt-16 sm:pt-24 md:pt-24 pb-20">
+      {/* Background Orbs */}
+      <InteractiveOrb 
+        initialX="85%" 
+        initialY="20%"
+        color="rgba(168,85,247,0.15)"
+        size="45rem"
+        opacity={0.6}
+        blur="110px"
+      />
+      <InteractiveOrb 
+        initialX="10%" 
+        initialY="80%"
+        color="rgba(204,255,0,0.12)"
+        size="40rem"
+        opacity={0.5}
+        blur="100px"
+      />
+
       <div className="absolute inset-0 z-0">
         <LiquidEther
           colors={liquidEtherColors}
@@ -165,17 +183,19 @@ function Presale() {
     <section className="relative px-6 py-24 overflow-hidden">
       {/* Background Orbs */}
       <InteractiveOrb 
-        className="-top-24 -left-48"
-        color="rgba(0,255,135,0.35)"
+        initialX="5%" 
+        initialY="15%"
+        color="rgba(0,255,135,0.25)"
         size="45rem"
-        opacity={1}
+        opacity={0.8}
         interactionStrength={30}
       />
       <InteractiveOrb 
-        className="top-1/2 -right-64 -translate-y-1/2"
-        color="rgba(168,85,247,0.3)"
+        initialX="95%" 
+        initialY="85%"
+        color="rgba(168,85,247,0.2)"
         size="50rem"
-        opacity={0.9}
+        opacity={0.7}
         interactionStrength={40}
       />
 
@@ -353,6 +373,15 @@ function Highlights() {
 
   return (
     <section id="about" className="relative px-6 py-24 overflow-hidden">
+      {/* Background Orbs */}
+      <InteractiveOrb 
+        initialX="80%" 
+        initialY="30%"
+        color="rgba(204,255,0,0.15)"
+        size="40rem"
+        opacity={0.6}
+        blur="110px"
+      />
       <div className="absolute inset-0 z-0 opacity-60">
         <Grainient 
           color1="#000000" 
@@ -449,17 +478,19 @@ function Tokenomics() {
     <section className="relative px-6 py-32 overflow-hidden">
       {/* Background Orbs */}
       <InteractiveOrb 
-        className="-bottom-32 -left-48"
-        color="rgba(0,255,135,0.2)"
+        initialX="10%" 
+        initialY="90%"
+        color="rgba(0,255,135,0.15)"
         size="45rem"
-        opacity={0.8}
+        opacity={0.7}
         interactionStrength={35}
       />
       <InteractiveOrb 
-        className="top-0 -right-40"
-        color="rgba(204,255,0,0.25)"
+        initialX="85%" 
+        initialY="10%"
+        color="rgba(204,255,0,0.18)"
         size="50rem"
-        opacity={0.9}
+        opacity={0.8}
         interactionStrength={25}
       />
 
@@ -507,7 +538,16 @@ function Timeline() {
   ];
 
   return (
-    <section id="roadmap" className="relative px-6 py-24">
+    <section id="roadmap" className="relative px-6 py-24 overflow-hidden">
+      {/* Background Orbs */}
+      <InteractiveOrb 
+        initialX="20%" 
+        initialY="50%"
+        color="rgba(168,85,247,0.1)"
+        size="40rem"
+        opacity={0.5}
+        blur="120px"
+      />
       <div className="mx-auto max-w-7xl">
         <div className="max-w-3xl">
           <div className="text-xs tracking-[0.3em] text-[color:var(--lime)] uppercase">Sale Timeline</div>
@@ -593,18 +633,20 @@ function Security() {
     <section className="relative px-6 py-24 overflow-hidden">
       {/* Background Orbs */}
       <InteractiveOrb 
-        className="-top-40 -right-48"
-        color="rgba(168,85,247,0.25)"
+        initialX="90%" 
+        initialY="10%"
+        color="rgba(168,85,247,0.2)"
         size="55rem"
-        opacity={0.8}
+        opacity={0.7}
         blur="120px"
         interactionStrength={50}
       />
       <InteractiveOrb 
-        className="-bottom-24 -left-32"
-        color="rgba(0,255,135,0.3)"
+        initialX="10%" 
+        initialY="85%"
+        color="rgba(0,255,135,0.25)"
         size="40rem"
-        opacity={0.9}
+        opacity={0.8}
         interactionStrength={30}
       />
 

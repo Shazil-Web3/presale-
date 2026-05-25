@@ -102,123 +102,103 @@ export default function DashboardSidebar({ isOpen, setIsOpen }) {
               </Link>
             );
           })}
-        </nav>
 
-        {/* Footer / Wallet Info */}
-        <div className="border-t border-white/5 p-4 space-y-4">
-          <Link
-            href="/"
-            className="group flex lg:hidden items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-acid-lime transition-colors py-3 px-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 w-full justify-center"
-          >
-            <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
-            Back to Website
-          </Link>
+          <div className="mt-8 pt-6 border-t border-white/5 space-y-4">
+            <Link
+              href="/"
+              className="group flex lg:hidden items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-acid-lime transition-colors py-3 px-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 w-full justify-center"
+            >
+              <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
+              Back to Website
+            </Link>
 
-          <ConnectButton.Custom>
-            {({
-              account,
-              chain,
-              openAccountModal,
-              openChainModal,
-              openConnectModal,
-              mounted,
-            }) => {
-              const ready = mounted;
-              const connected = ready && account && chain;
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                mounted,
+              }) => {
+                const ready = mounted;
+                const connected = ready && account && chain;
 
-              if (!connected) {
+                if (!connected) {
+                  return (
+                    <motion.button
+                      onClick={openConnectModal}
+                      whileHover={{ scale: 1.02, backgroundColor: "rgba(204, 255, 0, 0.15)" }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex w-full items-center justify-center gap-3 rounded-xl bg-acid-lime/10 border border-acid-lime/20 px-4 py-3 text-sm font-bold text-acid-lime transition-all"
+                    >
+                      <Wallet className="h-5 w-5" />
+                      Connect Wallet
+                    </motion.button>
+                  );
+                }
+
                 return (
-                  <motion.button
-                    onClick={openConnectModal}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0px rgba(204, 255, 0, 0)",
-                        "0 0 15px rgba(204, 255, 0, 0.25)",
-                        "0 0 0px rgba(204, 255, 0, 0)"
-                      ],
-                      borderColor: [
-                        "rgba(204, 255, 0, 0.2)",
-                        "rgba(204, 255, 0, 0.6)",
-                        "rgba(204, 255, 0, 0.2)"
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="flex w-full items-center justify-center gap-3 rounded-xl bg-acid-lime/10 border px-4 py-3 text-sm font-bold text-acid-lime transition-all"
-                  >
-                    <Wallet className="h-5 w-5" />
-                    Connect Wallet
-                  </motion.button>
-                );
-              }
-
-              return (
-                <div className="space-y-3">
-                  <motion.div 
-                    animate={{
-                      boxShadow: [
-                        "0 0 0px rgba(204, 255, 0, 0)",
-                        "0 0 12px rgba(204, 255, 0, 0.15)",
-                        "0 0 0px rgba(204, 255, 0, 0)"
-                      ],
-                      borderColor: [
-                        "rgba(255, 255, 255, 0.05)",
-                        "rgba(204, 255, 0, 0.4)",
-                        "rgba(255, 255, 255, 0.05)"
-                      ]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="rounded-xl bg-white/5 border p-3"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-acid-lime/10 shadow-[0_0_15px_rgba(204,255,0,0.1)]">
-                          <Wallet className="h-4 w-4 text-acid-lime" />
+                  <div className="space-y-3">
+                    <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-acid-lime/10 shadow-[0_0_15px_rgba(204,255,0,0.1)]">
+                            <Wallet className="h-4 w-4 text-acid-lime" />
+                          </div>
+                          <div className="overflow-hidden">
+                            <p className="truncate text-xs font-bold text-foreground">
+                              {account.displayName}
+                            </p>
+                            <p className="truncate text-[10px] font-medium text-muted-foreground">
+                              {account.displayBalance ? account.displayBalance : "Connected"}
+                            </p>
+                          </div>
                         </div>
-                        <div className="overflow-hidden">
-                          <p className="truncate text-xs font-bold text-foreground">
-                            {account.displayName}
-                          </p>
-                          <p className="truncate text-[10px] font-medium text-muted-foreground">
-                            {account.displayBalance ? account.displayBalance : "Connected"}
-                          </p>
-                        </div>
+                        <button 
+                          onClick={openAccountModal}
+                          className="p-1.5 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
+                        >
+                          <Settings size={14} />
+                        </button>
                       </div>
-                      <button 
-                        onClick={openAccountModal}
-                        className="p-1.5 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-white transition-colors"
+
+                      <button
+                        onClick={openChainModal}
+                        className="flex w-full items-center justify-between gap-2 rounded-lg bg-white/5 border border-white/5 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-foreground hover:bg-white/10 transition-all"
                       >
-                        <Settings size={14} />
+                        <div className="flex items-center gap-2">
+                          {chain.hasIcon && chain.iconUrl && (
+                            <img src={chain.iconUrl} alt={chain.name} className="h-3 w-3 rounded-full" />
+                          )}
+                          <span>{chain.name}</span>
+                        </div>
+                        <ExternalLink size={10} className="text-acid-lime" />
                       </button>
                     </div>
 
                     <button
-                      onClick={openChainModal}
-                      className="flex w-full items-center justify-between gap-2 rounded-lg bg-white/5 border border-white/5 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-foreground hover:bg-white/10 transition-all"
+                      onClick={() => {
+                        disconnect();
+                        setIsOpen(false);
+                      }}
+                      className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-red-500/10 hover:text-red-400"
                     >
-                      <div className="flex items-center gap-2">
-                        {chain.hasIcon && chain.iconUrl && (
-                          <img src={chain.iconUrl} alt={chain.name} className="h-3 w-3 rounded-full" />
-                        )}
-                        <span>{chain.name}</span>
-                      </div>
-                      <ExternalLink size={10} className="text-acid-lime" />
+                      <LogOut className="h-4 w-4" />
+                      Logout
                     </button>
-                  </motion.div>
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
+          </div>
+        </nav>
 
-                  <button
-                    onClick={() => {
-                      disconnect();
-                      setIsOpen(false);
-                    }}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-red-500/10 hover:text-red-400"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                  </button>
-                </div>
-              );
-            }}
-          </ConnectButton.Custom>
+        {/* Footer */}
+        <div className="border-t border-white/5 p-4 flex justify-center">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+            BitRaxx Dashboard v1.0
+          </p>
         </div>
       </div>
     </aside>

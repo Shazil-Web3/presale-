@@ -97,9 +97,9 @@ export default function DashboardPage() {
             <div className="relative z-10 flex flex-col gap-8 sm:gap-10">
               <div className="flex flex-col md:flex-row items-center gap-8 sm:gap-10">
                 <div className="relative flex items-center justify-center group/chart flex-shrink-0">
-                  {/* Decorative rotating border */}
-                  <div className="absolute inset-0 -m-3 sm:-m-4 pointer-events-none opacity-20 group-hover/chart:opacity-40 transition-opacity">
-                    <div className="absolute inset-0 border-[1px] border-dashed border-white/20 rounded-full animate-[spin_30s_linear_infinite]" />
+                  {/* Decorative static border with subtle hover effect */}
+                  <div className="absolute inset-0 -m-3 sm:-m-4 pointer-events-none opacity-10 group-hover/chart:opacity-20 transition-opacity">
+                    <div className="absolute inset-0 border-[1px] border-dashed border-white/40 rounded-full" />
                   </div>
 
                   <svg className="h-32 w-32 sm:h-40 sm:w-40 transform -rotate-90 overflow-visible">
@@ -108,13 +108,6 @@ export default function DashboardPage() {
                         <stop offset="0%" stopColor="#CCFF00" />
                         <stop offset="100%" stopColor="#00FF87" />
                       </linearGradient>
-                      <filter id="glow">
-                        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-                        <feMerge>
-                          <feMergeNode in="coloredBlur" />
-                          <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                      </filter>
                     </defs>
 
                     {/* Background Ring */}
@@ -150,8 +143,7 @@ export default function DashboardPage() {
                       initial={{ strokeDashoffset: 352 }}
                       animate={{ strokeDashoffset: 352 * 0.25 }}
                       transition={{ duration: 2, ease: "easeOut" }}
-                      filter="url(#glow)"
-                      className="drop-shadow-[0_0_8px_rgba(204,255,0,0.4)] sm:hidden"
+                      className="drop-shadow-[0_0_8px_rgba(204,255,0,0.3)] sm:hidden"
                     />
                     <motion.circle
                       cx={80}
@@ -165,8 +157,7 @@ export default function DashboardPage() {
                       initial={{ strokeDashoffset: 440 }}
                       animate={{ strokeDashoffset: 440 * 0.25 }}
                       transition={{ duration: 2, ease: "easeOut" }}
-                      filter="url(#glow)"
-                      className="drop-shadow-[0_0_8px_rgba(204,255,0,0.4)] hidden sm:block"
+                      className="drop-shadow-[0_0_8px_rgba(204,255,0,0.3)] hidden sm:block"
                     />
                   </svg>
                   

@@ -13,16 +13,14 @@ export default function DashboardHeader({ title, subtitle, onMenuClick }) {
       <div className="flex items-center gap-4 min-w-0 flex-1">
         <motion.button
           onClick={onMenuClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           animate={{
+            borderColor: ["rgba(204, 255, 0, 0.3)", "rgba(204, 255, 0, 0.6)", "rgba(204, 255, 0, 0.3)"],
             boxShadow: [
-              "0 0 0px rgba(204, 255, 0, 0)",
-              "0 0 10px rgba(204, 255, 0, 0.25)",
-              "0 0 0px rgba(204, 255, 0, 0)"
-            ],
-            borderColor: [
-              "rgba(255, 255, 255, 0.1)",
-              "rgba(204, 255, 0, 0.6)",
-              "rgba(255, 255, 255, 0.1)"
+              "0 0 15px rgba(204, 255, 0, 0.2)",
+              "0 0 25px rgba(204, 255, 0, 0.4)",
+              "0 0 15px rgba(204, 255, 0, 0.2)"
             ]
           }}
           transition={{
@@ -30,9 +28,9 @@ export default function DashboardHeader({ title, subtitle, onMenuClick }) {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="p-2 rounded-lg border bg-white/5 text-muted-foreground hover:text-white lg:hidden flex-shrink-0"
+          className="p-1.5 rounded-lg border bg-acid-lime/10 text-acid-lime transition-colors lg:hidden flex-shrink-0"
         >
-          <Menu size={20} className="text-acid-lime" />
+          <Menu size={20} />
         </motion.button>
         
         <div className="min-w-0">
