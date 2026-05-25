@@ -78,7 +78,7 @@ function Hero() {
   const liquidEtherColors = useMemo(() => ["#5227FF", "#97e324", "#b5ff44"], []);
 
   return (
-    <section id="home" className="relative min-h-screen overflow-hidden px-6 flex items-center pt-24 pb-20">
+    <section id="home" className="relative min-h-[100svh] overflow-hidden px-6 flex items-center pt-16 sm:pt-24 md:pt-24 pb-20">
       <div className="absolute inset-0 z-0">
         <LiquidEther
           colors={liquidEtherColors}
@@ -107,11 +107,11 @@ function Hero() {
             Live Presale: Phase 1 Active
           </div>
 
-          <h1 className="font-display mt-8 max-w-4xl text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-8xl">
+          <h1 className="font-display mt-8 max-w-4xl text-4xl leading-[1.1] font-bold tracking-tight md:text-5xl lg:text-7xl">
             Launching a <span className="text-gradient-lime">Safer Future</span> in Crypto Trading
           </h1>
 
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+          <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             BitRaxx ($BRX) is an institutional-grade, security-first ecosystem backed by a
             live operational trading platform. Advanced risk-management infrastructure
             designed to improve trading protection and capital efficiency.
@@ -126,7 +126,7 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="mt-16 grid w-full max-w-2xl grid-cols-3 gap-8">
+          <div className="mt-16 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-3 md:gap-8">
             {[
               { k: "Scalable", v: "Infrastructure" },
               { k: "Advanced", v: "Protection" },
@@ -134,9 +134,9 @@ function Hero() {
             ].map((s) => (
               <BorderGlow key={s.v} borderRadius={16} glowIntensity={2.9} backgroundColor="transparent">
                 <GlareHover borderRadius="1rem" glareOpacity={0.15}>
-                  <div className="glass h-full w-full p-6">
-                    <div className="font-display text-gradient-lime text-3xl font-bold">{s.k}</div>
-                    <div className="mt-2 text-sm text-muted-foreground uppercase tracking-wider">{s.v}</div>
+                  <div className="glass h-full w-full p-6 text-center md:text-left">
+                    <div className="font-display text-gradient-lime text-2xl font-bold md:text-3xl">{s.k}</div>
+                    <div className="mt-2 text-[10px] text-muted-foreground uppercase tracking-wider md:text-sm">{s.v}</div>
                   </div>
                 </GlareHover>
               </BorderGlow>
@@ -199,35 +199,35 @@ function Presale() {
           <div className="radial-lime absolute -inset-6" />
           <GlareHover borderRadius="1.5rem" glareOpacity={0.15}>
             <div className="glass relative p-6 md:p-8">
-                <div className="mb-5 flex items-center justify-between">
-                  <span className="text-xs tracking-widest text-muted-foreground uppercase">Network</span>
-              <div className="flex rounded-full border border-white/5 bg-white/5 p-1">
+            <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-xs tracking-widest text-muted-foreground uppercase">Network</span>
+              <div className="flex w-full rounded-2xl border border-white/5 bg-white/5 p-1 sm:w-auto sm:rounded-full">
                 {["BSC", "ETH"].map((n) => (
                   <button
                     key={n}
                     onClick={() => setNetwork(n)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-semibold transition ${
+                    className={`flex-1 rounded-xl px-4 py-2 text-xs font-semibold transition sm:flex-none sm:rounded-full sm:py-1.5 ${
                       network === n
-                        ? "bg-[color:var(--lime)] text-[#08080A]"
+                        ? "bg-acid-lime/15 text-acid-lime ring-1 ring-acid-lime/30"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {n === "BSC" ? "BNB Chain (BEP-20)" : "Ethereum"}
+                    {n === "BSC" ? "BNB Chain" : "Ethereum"}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="mb-5 grid grid-cols-3 gap-2">
+            <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {["USDT", "BNB", "ETH"].map((c) => (
                 <button
                   key={c}
                   onClick={() => setCurrency(c)}
                   className={`rounded-xl border py-3 text-sm font-semibold transition ${
                     currency === c
-                      ? "border-[color:var(--lime)] bg-[color:var(--lime)]/10 text-foreground"
+                      ? "border-acid-lime/50 bg-acid-lime/10 text-acid-lime shadow-[0_0_10px_rgba(204,255,0,0.1)]"
                       : "border-white/5 bg-white/5 text-muted-foreground hover:text-foreground"
-                  }`}
+                  } ${c === "ETH" && "col-span-2 sm:col-span-1"}`}
                 >
                   {c}
                 </button>
@@ -282,7 +282,7 @@ function Presale() {
 }
 
 function Chains() {
-  const items = [
+  const baseItems = [
     "Ethereum",
     "BNB Chain (BEP-20)",
     "MetaMask",
@@ -290,28 +290,42 @@ function Chains() {
     "Binance Web3",
     "WalletConnect",
   ];
-  const row = [...items, ...items];
-
+  // Repeat the core items many times to ensure a dense, seamless loop that covers all screen widths
+  const items = [...baseItems, ...baseItems, ...baseItems, ...baseItems, ...baseItems, ...baseItems, ...baseItems, ...baseItems];
+  
   return (
-    <section className="relative overflow-hidden border-y border-white/5 py-16">
-      <div className="mb-8 text-center text-xs tracking-[0.3em] text-muted-foreground uppercase">
+    <section className="relative w-full overflow-hidden border-y border-white/5 py-12 md:py-16">
+      <div className="mb-8 px-6 text-center text-[10px] md:text-xs tracking-[0.3em] text-muted-foreground uppercase">
         Supported networks & institutional wallets
       </div>
-      <div className="relative">
+      <div className="relative flex overflow-hidden">
         <div className="absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-[#08080A] to-transparent" />
         <div className="absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-[#08080A] to-transparent" />
-        <div className="marquee flex w-max gap-4">
-          {row.map((c, i) => (
-            <span
-              key={`${c}-${i}`}
-              className="glass group whitespace-nowrap rounded-full border border-white/5 px-5 py-3 text-sm text-muted-foreground transition-colors hover:border-[color:var(--lime)]/40 hover:text-[color:var(--lime)]"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
+        
+        <div className="marquee-container flex py-2 w-full">
+             <div className="marquee-content flex w-max gap-4">
+                   {items.map((c, i) => (
+                     <span
+                       key={`c1-${i}`}
+                       className="glass group whitespace-nowrap rounded-full border border-white/5 px-5 py-2.5 text-xs font-medium text-muted-foreground transition-all hover:border-[color:var(--lime)]/40 hover:text-[color:var(--lime)] hover:bg-white/5"
+                     >
+                       {c}
+                     </span>
+                   ))}
+                 </div>
+                 <div className="marquee-content flex w-max gap-4" aria-hidden="true">
+                   {items.map((c, i) => (
+                     <span
+                       key={`c2-${i}`}
+                       className="glass group whitespace-nowrap rounded-full border border-white/5 px-5 py-2.5 text-xs font-medium text-muted-foreground transition-all hover:border-[color:var(--lime)]/40 hover:text-[color:var(--lime)] hover:bg-white/5"
+                     >
+                       {c}
+                     </span>
+                   ))}
+                 </div>
+           </div>
+       </div>
+     </section>
   );
 }
 
@@ -453,19 +467,19 @@ function Tokenomics() {
         <div className="max-w-3xl mb-16">
           <div className="text-xs tracking-[0.3em] text-[color:var(--lime)] uppercase font-bold">Tokenomics</div>
           <h2 className="font-display mt-4 text-4xl font-bold tracking-tight md:text-6xl leading-tight">
-            Allocation built for <br />
+            Allocation built for <br className="hidden md:block" />
             <span className="text-gradient-lime italic">long-term durability</span>.
           </h2>
-          <p className="mt-6 text-muted-foreground text-lg max-w-2xl leading-relaxed">
+          <p className="mt-6 text-muted-foreground text-base md:text-lg max-w-2xl leading-relaxed">
             A balanced distribution model designed for sustainable ecosystem growth, 
             long-term incentive alignment, and robust liquidity depth.
           </p>
-          <div className="mt-8 flex items-center gap-6">
-            <div className="glass px-5 py-3 rounded-2xl border border-white/5">
+          <div className="mt-8 flex flex-wrap items-center gap-4 md:gap-6">
+            <div className="glass flex-1 min-w-[140px] px-5 py-3 rounded-2xl border border-white/5 md:flex-none">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground block mb-1">Symbol</span>
               <span className="font-mono text-acid-lime font-bold">$BRX</span>
             </div>
-            <div className="glass px-5 py-3 rounded-2xl border border-white/5">
+            <div className="glass flex-1 min-w-[140px] px-5 py-3 rounded-2xl border border-white/5 md:flex-none">
               <span className="text-[10px] uppercase tracking-widest text-muted-foreground block mb-1">Total Supply</span>
               <span className="font-mono text-foreground font-bold">200,000,000</span>
             </div>
@@ -637,21 +651,21 @@ function FooterHighlights() {
   return (
     <section className="relative border-t border-white/5 px-6 pb-8 pt-16">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2">
-        <div>
-          <div className="flex items-center gap-2.5">
+        <div className="text-center md:text-left">
+          <div className="flex items-center justify-center gap-2.5 md:justify-start">
             <span className="h-5 w-5 rotate-45 rounded-[3px]" style={{ background: "linear-gradient(135deg,#CCFF00,#00FF87)" }} />
             <span className="font-display font-bold">
               BitRaxx<span style={{ color: "#00FF87" }}>.io</span>
             </span>
           </div>
-          <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-5 mx-auto max-w-md text-sm leading-relaxed text-muted-foreground md:mx-0">
             BitRaxx is building a security-focused digital asset ecosystem designed for
             global scalability across the MENA region, Southeast Asia, and European
             hubs, delivering professional crypto rails to enterprise partners.
           </p>
         </div>
-        <div className="flex items-start md:justify-end">
-          <div className="flex gap-3">
+        <div className="flex items-center justify-center md:items-start md:justify-end">
+          <div className="flex flex-wrap justify-center gap-3">
             {socials.map(({ icon: Icon, label }) => (
               <a
                 key={label}

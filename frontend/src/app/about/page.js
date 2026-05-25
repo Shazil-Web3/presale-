@@ -62,14 +62,14 @@ const Grainient = dynamic(() => import("@/components/ui/Grainient"), {
 function SectionHeader({ tag, title, description, centered = false }) {
   return (
     <div className={`mb-12 ${centered ? "text-center mx-auto max-w-3xl" : "max-w-3xl"}`}>
-      <div className="text-xs tracking-[0.3em] text-[color:var(--acid-lime)] uppercase font-semibold">
+      <div className="text-[10px] md:text-xs tracking-[0.3em] text-[color:var(--acid-lime)] uppercase font-semibold">
         {tag}
       </div>
-      <h2 className="font-display mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+      <h2 className="font-display mt-4 text-3xl font-bold tracking-tight md:text-5xl">
         {title}
       </h2>
       {description && (
-        <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+        <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
           {description}
         </p>
       )}
@@ -79,7 +79,7 @@ function SectionHeader({ tag, title, description, centered = false }) {
 
 function AboutHero() {
   return (
-    <section className="relative min-h-[90vh] overflow-hidden px-6 flex items-center pt-32 pb-20 text-center">
+    <section className="relative min-h-[100svh] overflow-hidden px-6 flex items-center pt-32 pb-20 text-center">
       <div className="absolute inset-0 z-0 opacity-40">
         <div className="quantum-grid absolute inset-0" />
         <ShapeGrid 
@@ -100,24 +100,24 @@ function AboutHero() {
           transition={{ duration: 0.8 }}
           className="flex flex-col items-center"
         >
-          <div className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs text-foreground/80 mb-8">
+          <div className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] md:text-xs text-foreground/80 mb-8">
             <span className="h-1.5 w-1.5 rounded-full bg-acid-lime animate-pulse" />
             BitRaxx Ecosystem
           </div>
 
-          <h1 className="font-display text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-8xl">
+          <h1 className="font-display text-4xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-8xl">
             Building Secure Infrastructure For The <span className="text-[color:var(--acid-lime)]">Next Era</span> Of Digital Assets
           </h1>
 
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+          <p className="mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-xl">
             BitRaxx is a security-focused digital asset ecosystem designed to simplify multi-chain trading, token participation, and investor accessibility through scalable blockchain infrastructure.
           </p>
 
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Link href="/dashboard" className="btn-gradient inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold shadow-[0_0_20px_rgba(204,255,0,0.3)]">
+          <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
+            <Link href="/dashboard" className="btn-gradient inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 font-semibold shadow-[0_0_20px_rgba(204,255,0,0.3)]">
               Explore Ecosystem <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/about" className="glass inline-flex items-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
+            <Link href="/about" className="glass inline-flex items-center justify-center gap-2 rounded-xl px-8 py-4 font-semibold transition-colors hover:bg-white/10">
               <FileText className="h-4 w-4" /> Whitepaper
             </Link>
           </div>
@@ -159,7 +159,7 @@ function AboutBitRaxx() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {cards.map((card, i) => (
                             <motion.div
                                 key={card.title}
@@ -169,9 +169,9 @@ function AboutBitRaxx() {
                                 viewport={{ once: true }}
                             >
                                 <GlareHover borderRadius="1.5rem">
-                                    <div className="glass p-6 h-40 flex flex-col items-center justify-center text-center gap-4">
+                                    <div className="glass p-6 h-auto sm:h-40 flex flex-col items-center justify-center text-center gap-4">
                                         <card.icon className="h-8 w-8 text-acid-lime" />
-                                        <span className="font-semibold text-sm uppercase tracking-wider">{card.title}</span>
+                                        <span className="font-semibold text-xs sm:text-sm uppercase tracking-wider">{card.title}</span>
                                     </div>
                                 </GlareHover>
                             </motion.div>
@@ -218,11 +218,11 @@ function PlatformVision() {
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ type: "spring", delay: i * 0.2 }}
                                 viewport={{ once: true }}
-                                className="text-5xl font-bold text-[color:var(--acid-lime)] mb-2"
+                                className="text-4xl md:text-5xl font-bold text-[color:var(--acid-lime)] mb-2"
                             >
                                 {m.value}
                             </motion.div>
-                            <div className="text-muted-foreground uppercase tracking-widest text-sm">{m.label}</div>
+                            <div className="text-muted-foreground uppercase tracking-widest text-[10px] md:text-sm">{m.label}</div>
                         </div>
                     ))}
                 </div>
@@ -278,15 +278,15 @@ function CoreEcosystemFeatures() {
                     title="Core Ecosystem Features"
                 />
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
                     {features.map((f, i) => (
                         <BorderGlow key={f.title} borderRadius={24} glowIntensity={2}>
                             <GlareHover borderRadius="1.5rem">
-                                <div className="glass p-8 h-full flex flex-col gap-4 group">
+                                <div className="glass p-6 md:p-8 h-full flex flex-col gap-4 group">
                                     <div className="h-12 w-12 rounded-xl bg-acid-lime/10 border border-acid-lime/20 flex items-center justify-center transition-colors group-hover:bg-acid-lime/20">
                                         <f.icon className="h-6 w-6 text-acid-lime" />
                                     </div>
-                                    <h3 className="text-xl font-bold">{f.title}</h3>
+                                    <h3 className="text-lg md:text-xl font-bold">{f.title}</h3>
                                     <p className="text-sm text-muted-foreground leading-relaxed">
                                         {f.desc}
                                     </p>
@@ -323,30 +323,30 @@ function MultiChainInfrastructure() {
                     description="Built with modern Web3 wallet standards for seamless cross-network participation across the digital asset landscape."
                 />
 
-                <div className="mt-16 w-full max-w-4xl space-y-20">
+                <div className="mt-16 w-full max-w-4xl space-y-12 md:space-y-20">
                     <div className="flex flex-col items-center">
                         <h3 className="text-[10px] uppercase tracking-[0.3em] text-acid-lime font-bold mb-8">Supported Networks</h3>
-                        <div className="flex flex-wrap justify-center gap-6">
+                        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                             {networks.map((n) => (
-                                <div key={n.name} className="glass px-10 py-5 rounded-[2rem] border border-white/5 flex items-center gap-4 hover:border-white/10 transition-all hover:scale-105 group">
+                                <div key={n.name} className="glass px-6 py-4 md:px-10 md:py-5 rounded-2xl md:rounded-[2rem] border border-white/5 flex items-center gap-3 md:gap-4 hover:border-white/10 transition-all hover:scale-105 group">
                                     <div 
-                                        className="h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs bg-white/5 border border-white/10 transition-colors group-hover:border-white/20"
+                                        className="h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center font-bold text-[10px] md:text-xs bg-white/5 border border-white/10 transition-colors group-hover:border-white/20"
                                         style={{ color: n.color }}
                                     >
                                         {n.icon}
                                     </div>
-                                    <span className="font-bold text-lg tracking-tight">{n.name}</span>
+                                    <span className="font-bold text-base md:text-lg tracking-tight">{n.name}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     <div className="flex flex-col items-center">
-                        <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/10 to-transparent mb-12" />
+                        <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8 md:mb-12" />
                         <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold mb-8">Supported Wallets</h3>
-                        <div className="flex flex-wrap justify-center gap-4">
+                        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
                             {wallets.map((w) => (
-                                <div key={w} className="glass px-8 py-4 rounded-2xl border border-white/5 text-sm font-medium text-muted-foreground hover:text-acid-lime hover:border-acid-lime/30 transition-all hover:-translate-y-1">
+                                <div key={w} className="glass px-6 py-3 md:px-8 md:py-4 rounded-xl md:rounded-2xl border border-white/5 text-xs md:text-sm font-medium text-muted-foreground hover:text-acid-lime hover:border-acid-lime/30 transition-all hover:-translate-y-1">
                                     {w}
                                 </div>
                             ))}
@@ -483,12 +483,12 @@ function CommunityContact() {
              </div>
 
              <div className="mx-auto max-w-7xl relative z-10 text-center">
-                <div className="glass p-12 md:p-20 rounded-[3rem] border border-white/10">
-                    <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-8">
+                <div className="glass p-8 md:p-20 rounded-[2rem] md:rounded-[3rem] border border-white/10">
+                    <h2 className="font-display text-3xl md:text-6xl font-bold tracking-tight mb-8">
                         Join The BitRaxx Community
                     </h2>
                     
-                    <div className="flex flex-wrap justify-center gap-6 mb-12">
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-12">
                         {[
                             { icon: IconTelegram, label: "Telegram", href: "#" },
                             { icon: IconTwitter, label: "X/Twitter", href: "#" },
@@ -498,7 +498,7 @@ function CommunityContact() {
                             <Link 
                                 key={s.label} 
                                 href={s.href}
-                                className="glass h-14 w-14 rounded-full flex items-center justify-center text-muted-foreground hover:text-acid-lime hover:border-acid-lime/30 transition-all hover:scale-110"
+                                className="glass h-12 w-12 md:h-14 md:w-14 rounded-full flex items-center justify-center text-muted-foreground hover:text-acid-lime hover:border-acid-lime/30 transition-all hover:scale-110"
                             >
                                 <s.icon />
                             </Link>
@@ -506,7 +506,7 @@ function CommunityContact() {
                     </div>
 
                     <div className="flex flex-col md:flex-row justify-center gap-4">
-                         <Link href="/dashboard" className="btn-gradient rounded-xl px-10 py-5 font-bold text-lg inline-block text-center">
+                         <Link href="/dashboard" className="btn-gradient rounded-xl px-10 py-4 md:py-5 font-bold text-base md:text-lg inline-block text-center w-full md:w-auto">
                             Participate In Presale
                          </Link>
                     </div>

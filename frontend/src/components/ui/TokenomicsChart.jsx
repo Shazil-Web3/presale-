@@ -16,8 +16,8 @@ export default function TokenomicsChart({ slices, totalAmount = "200M", totalLab
         {/* Outer glow background */}
         <div className="absolute inset-0 bg-acid-lime/5 blur-[120px] -z-10" />
         
-        <div className="relative group">
-          <svg viewBox="-125 -125 250 250" className="h-72 w-72 md:h-80 md:w-80 overflow-visible">
+        <div className="relative group w-full flex justify-center">
+          <svg viewBox="-125 -125 250 250" className="h-64 w-64 sm:h-72 sm:w-72 md:h-80 md:w-80 overflow-visible">
             {/* Background Ring */}
             <circle
               r={radius}

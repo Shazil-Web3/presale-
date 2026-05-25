@@ -32,14 +32,14 @@ const Grainient = dynamic(() => import("@/components/ui/Grainient"), {
 function SectionHeader({ tag, title, description, centered = false }) {
   return (
     <div className={`mb-12 ${centered ? "text-center mx-auto max-w-3xl" : "max-w-3xl"}`}>
-      <div className="text-xs tracking-[0.3em] text-[color:var(--acid-lime)] uppercase font-semibold">
+      <div className="text-[10px] md:text-xs tracking-[0.3em] text-[color:var(--acid-lime)] uppercase font-semibold">
         {tag}
       </div>
-      <h2 className="font-display mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+      <h2 className="font-display mt-4 text-3xl font-bold tracking-tight md:text-5xl">
         {title}
       </h2>
       {description && (
-        <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+        <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
           {description}
         </p>
       )}
@@ -49,7 +49,7 @@ function SectionHeader({ tag, title, description, centered = false }) {
 
 function RoadmapHero() {
   return (
-    <section className="relative min-h-[90vh] overflow-hidden px-6 flex items-center pt-32 pb-20">
+    <section className="relative min-h-[100svh] overflow-hidden px-6 flex items-center pt-32 pb-20">
       <div className="absolute inset-0 z-0 opacity-40">
         <div className="quantum-grid absolute inset-0" />
         <ShapeGrid 
@@ -69,16 +69,16 @@ function RoadmapHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
         >
-            <div className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs text-foreground/80 mb-8">
+            <div className="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[10px] md:text-xs text-foreground/80 mb-8">
               <Clock className="h-3.5 w-3.5 text-acid-lime" />
               Strategic Rollout
             </div>
 
-            <h1 className="font-display text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-8xl">
+            <h1 className="font-display text-4xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-8xl">
               Roadmap & <span className="text-[color:var(--acid-lime)]">Ecosystem</span> Expansion
             </h1>
 
-            <p className="mt-8 mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+            <p className="mt-8 mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground md:text-xl">
               A phased development approach designed to scale the BitRaxx ecosystem across infrastructure, investor accessibility, and future blockchain utilities.
             </p>
         </motion.div>
