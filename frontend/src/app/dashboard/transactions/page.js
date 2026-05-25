@@ -17,68 +17,69 @@ export default function TransactionsPage() {
       title="Transactions" 
       subtitle="Track your purchase history and allocation status."
     >
-      <section className="quantum-panel rounded-[32px] overflow-hidden">
-        <div className="p-8 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <h2 className="text-xl font-bold">Transaction History</h2>
-          <div className="flex w-full md:w-auto gap-3">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <section className="quantum-panel rounded-[24px] sm:rounded-[32px] overflow-hidden border-white/5 bg-surface/30">
+        <div className="p-6 sm:p-10 border-b border-white/5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <h2 className="text-xl font-bold text-foreground">Transaction History</h2>
+          <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
+            <div className="relative flex-1 lg:w-80">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input 
                 type="text" 
                 placeholder="Search Hash..." 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-acid-lime/50 transition-all"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-acid-lime/30 transition-all placeholder:text-muted-foreground/40"
               />
             </div>
-            <button className="p-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all">
-              <ExternalLink className="h-4 w-4 text-muted-foreground" />
+            <button className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-sm font-medium text-muted-foreground hover:text-foreground">
+              <ExternalLink className="h-4 w-4" />
+              <span className="sm:hidden lg:inline">Explorer</span>
             </button>
           </div>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-white/[0.02] text-xs uppercase tracking-wider text-muted-foreground">
+        <div className="overflow-x-auto scrollbar-hide">
+          <table className="w-full text-left min-w-[800px] lg:min-w-full">
+            <thead className="bg-white/[0.01] text-[10px] uppercase tracking-widest text-muted-foreground font-bold border-b border-white/5">
               <tr>
-                <th className="px-8 py-4 font-medium">Tx Hash</th>
-                <th className="px-6 py-4 font-medium">Network</th>
-                <th className="px-6 py-4 font-medium">Payment</th>
-                <th className="px-6 py-4 font-medium">Received</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-8 py-4 font-medium">Date</th>
+                <th className="px-6 sm:px-10 py-5">Tx Hash</th>
+                <th className="px-6 py-5">Network</th>
+                <th className="px-6 py-5">Payment</th>
+                <th className="px-6 py-5">Received</th>
+                <th className="px-6 py-5 text-center">Status</th>
+                <th className="px-6 sm:px-10 py-5 text-right">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {transactions.map((tx, i) => (
-                <tr key={i} className="group hover:bg-white/[0.02] transition-colors">
-                  <td className="px-8 py-5 font-mono text-xs text-acid-lime/80 group-hover:text-acid-lime cursor-pointer">{tx.hash}</td>
-                  <td className="px-6 py-5 text-sm">{tx.network}</td>
-                  <td className="px-6 py-5">
+                <tr key={i} className="group hover:bg-white/[0.015] transition-colors">
+                  <td className="px-6 sm:px-10 py-6 font-mono text-xs text-muted-foreground group-hover:text-acid-lime transition-colors cursor-pointer">{tx.hash}</td>
+                  <td className="px-6 py-6 text-sm font-medium text-foreground/80">{tx.network}</td>
+                  <td className="px-6 py-6">
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold">{tx.paid}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase">{tx.token}</span>
+                      <span className="text-sm font-bold text-foreground">{tx.paid}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">{tx.token}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-sm font-bold text-foreground">{tx.received}</td>
-                  <td className="px-6 py-5">
-                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
-                      tx.status === 'Confirmed' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' :
-                      tx.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20' :
-                      'bg-red-500/10 text-red-500 border border-red-500/20'
+                  <td className="px-6 py-6 text-sm font-bold text-foreground">{tx.received}</td>
+                  <td className="px-6 py-6 text-center">
+                    <span className={`inline-flex px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                      tx.status === 'Confirmed' ? 'bg-emerald-500/5 text-emerald-500 border border-emerald-500/10' :
+                      tx.status === 'Pending' ? 'bg-yellow-500/5 text-yellow-500 border border-yellow-500/10' :
+                      'bg-red-500/5 text-red-500 border border-red-500/10'
                     }`}>
                       {tx.status}
                     </span>
                   </td>
-                  <td className="px-8 py-5 text-sm text-muted-foreground">{tx.date}</td>
+                  <td className="px-6 sm:px-10 py-6 text-sm text-muted-foreground text-right">{tx.date}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div className="p-8 bg-white/[0.01] border-t border-white/5 flex justify-between items-center">
-          <p className="text-xs text-muted-foreground">Showing 5 of 12 transactions</p>
-          <div className="flex gap-2">
-            <button className="px-4 py-1.5 rounded-lg border border-white/10 text-xs disabled:opacity-50" disabled>Previous</button>
-            <button className="px-4 py-1.5 rounded-lg border border-white/10 text-xs">Next</button>
+        <div className="p-6 sm:p-8 bg-white/[0.005] border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-muted-foreground font-medium">Showing 5 of 12 transactions</p>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <button className="flex-1 sm:flex-none px-6 py-2 rounded-xl border border-white/10 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:bg-white/5 transition-all disabled:opacity-30 disabled:hover:bg-transparent" disabled>Previous</button>
+            <button className="flex-1 sm:flex-none px-6 py-2 rounded-xl border border-white/10 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:bg-white/5 transition-all">Next</button>
           </div>
         </div>
       </section>
