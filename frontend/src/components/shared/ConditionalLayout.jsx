@@ -7,8 +7,9 @@ import Footer from "./footer";
 export default function ConditionalLayout({ children }) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
+  const isAdmin = pathname.startsWith("/admin");
 
-  if (isDashboard) {
+  if (isDashboard || isAdmin) {
     return <>{children}</>;
   }
 

@@ -5,9 +5,9 @@ import { useState } from "react";
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-import { arbitrum, bsc, mainnet, polygon } from "wagmi/chains";
+import { arbitrum, bsc, mainnet } from "wagmi/chains";
 
-export const chains = [mainnet, bsc, polygon, arbitrum];
+export const chains = [mainnet, bsc, arbitrum];
 
 const config = getDefaultConfig({
   appName: "BitRaxx",

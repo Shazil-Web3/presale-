@@ -1,6 +1,5 @@
 const entries = [
   { hash: "0x9a...2f1", network: "BSC", token: "USDT", brx: "500,000" },
-  { hash: "0x4b...ab3", network: "ETH", token: "USDC", brx: "320,000" },
 ];
 
 export default function TransactionHistory() {

@@ -9,6 +9,7 @@ export default function Footer() {
       { label: "Presale", href: "/#home" },
       { label: "Tokenomics", href: "/roadmap" },
       { label: "Roadmap", href: "/roadmap" },
+      { label: "Admin Panel", href: "/admin" },
     ],
     resources: [
       { label: "Whitepaper", href: "/about" },

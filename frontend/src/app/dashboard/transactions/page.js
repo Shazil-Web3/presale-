@@ -5,8 +5,6 @@ import { Search, ExternalLink } from "lucide-react";
 
 const transactions = [
   { hash: "0x91A...D2C1", network: "BNB Smart Chain", token: "USDT", paid: "$500", received: "100,000 BRX", status: "Confirmed", date: "May 25, 2026" },
-  { hash: "0x32B...E4F2", network: "Ethereum", token: "USDC", paid: "$2,000", received: "400,000 BRX", status: "Pending", date: "May 24, 2026" },
-  { hash: "0x78C...G9H1", network: "Polygon", token: "MATIC", paid: "$250", received: "50,000 BRX", status: "Failed", date: "May 23, 2026" },
   { hash: "0x12D...K3L4", network: "BNB Smart Chain", token: "BNB", paid: "2.5 BNB", received: "150,000 BRX", status: "Confirmed", date: "May 22, 2026" },
   { hash: "0x56E...M5N6", network: "Ethereum", token: "ETH", paid: "1.2 ETH", received: "600,000 BRX", status: "Confirmed", date: "May 21, 2026" },
 ];
