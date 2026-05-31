@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useSpring, useMotionValue } from "framer-motion";
 import { useMousePosition } from "@/context/MouseContext";
 
@@ -23,6 +23,15 @@ export default function InteractiveOrb({
   const springConfig = { damping: 30, stiffness: 120 };
   const translateX = useSpring(mouseX, springConfig);
   const translateY = useSpring(mouseY, springConfig);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!animated) return;

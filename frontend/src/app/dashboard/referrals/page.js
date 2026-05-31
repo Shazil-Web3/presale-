@@ -1,23 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Users, Copy, CheckCircle2, TrendingUp, DollarSign, Award } from "lucide-react";
+import { Users, Copy, CheckCircle2, DollarSign, Award, Wallet, Sparkles, RefreshCw } from "lucide-react";
 
 export default function ReferralsPage() {
+  const { address, isConnected } = useAccount();
+  const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [referralLink, setReferralLink] = useState("");
+  const [metrics, setMetrics] = useState({ totalReferrals: 0, referredVolumeUsd: 0, rewardBrx: 0 });
+  const [referredInvestors, setReferredInvestors] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
 
+  const fetchReferrals = async (userWallet) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/dashboard/referrals?wallet=${userWallet}`);
+      const data = await res.json();
+      if (data.ok) {
+        setReferralLink(data.referralLink);
+        setMetrics(data.metrics);
+        setReferredInvestors(data.referredInvestors);
+      }
+    } catch (err) {
+      console.error("Failed to load referrals data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && isConnected && address) {
+      fetchReferrals(address);
+    }
+  }, [mounted, isConnected, address]);
+
   const copyReferral = () => {
-    navigator.clipboard.writeText("https://brx.io/ref/BRX9281");
+    if (!referralLink) return;
+    navigator.clipboard.writeText(referralLink);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
-  const referredUsers = [
-    { wallet: "0x123...456", amount: "$1,200", reward: "6,000 BRX", date: "May 20, 2026" },
-    { wallet: "0x789...abc", amount: "$500", reward: "2,500 BRX", date: "May 18, 2026" },
-    { wallet: "0xdef...ghi", amount: "$2,800", reward: "14,000 BRX", date: "May 15, 2026" },
-  ];
+  if (!mounted) return null;
+
+  // RENDER DISCONNECTED
+  if (!isConnected || !address) {
+    return (
+      <DashboardLayout 
+        title="Referral Program" 
+        subtitle="Invite friends and earn BRX rewards."
+      >
+        <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
+          <div className="max-w-md w-full relative overflow-hidden rounded-[32px] border border-white/10 bg-surface/30 p-8 backdrop-blur-xl flex flex-col items-center gap-6">
+            <div className="h-16 w-16 rounded-2xl bg-acid-lime/10 flex items-center justify-center border border-acid-lime/25 shadow-[0_0_20px_rgba(204,255,0,0.15)]">
+              <Users className="h-8 w-8 text-acid-lime" />
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-foreground">Connect Wallet</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Connect your wallet to generate your unique referral links and start earning 5% BRX commissions.
+              </p>
+            </div>
+
+            <div className="rainbow-connect-wrapper scale-[1.05] mt-2">
+              <ConnectButton />
+            </div>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // RENDER LOADING
+  if (loading) {
+    return (
+      <DashboardLayout 
+        title="Referral Program" 
+        subtitle="Invite friends and earn BRX rewards."
+      >
+        <div className="min-h-[50vh] flex flex-col items-center justify-center gap-4">
+          <RefreshCw className="h-8 w-8 text-acid-lime animate-spin" />
+          <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Querying Referrals Ledger...</span>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout 
@@ -38,11 +114,11 @@ export default function ReferralsPage() {
               </div>
             </div>
 
-            <div className="p-4 sm:p-6 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-black/40 border border-white/10 space-y-4">
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Your Unique Referral Link</p>
               <div className="flex flex-col md:flex-row gap-3">
                 <div className="flex-1 bg-black/40 rounded-xl px-4 py-3 text-xs sm:text-sm font-mono text-muted-foreground truncate border border-white/5 flex items-center min-h-[48px]">
-                  https://brx.io/ref/BRX9281
+                  {referralLink}
                 </div>
                 <button 
                   onClick={copyReferral}
@@ -56,9 +132,9 @@ export default function ReferralsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-4">
               {[
-                { label: "Total Referrals", value: "12", icon: Users },
-                { label: "Referred Volume", value: "$4,500", icon: DollarSign },
-                { label: "Total Rewards", value: "15,000 BRX", icon: Award, color: "text-acid-lime" },
+                { label: "Total Referrals", value: metrics.totalReferrals.toString(), icon: Users },
+                { label: "Referred Volume", value: `$${metrics.referredVolumeUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, icon: DollarSign },
+                { label: "Total Rewards", value: `${metrics.rewardBrx.toLocaleString()} BRX`, icon: Award, color: "text-acid-lime" },
               ].map((stat, i) => (
                 <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/10 flex flex-col justify-between min-h-[100px]">
                   <div className="flex justify-between items-start">
@@ -79,26 +155,34 @@ export default function ReferralsPage() {
               <h2 className="text-lg sm:text-xl font-bold text-foreground">Referred Investors</h2>
             </div>
             <div className="overflow-x-auto scrollbar-hide">
-              <table className="w-full text-left min-w-[600px] lg:min-w-full">
-                <thead className="bg-white/[0.01] text-[10px] uppercase tracking-widest text-muted-foreground font-bold border-b border-white/5">
-                  <tr>
-                    <th className="px-6 sm:px-8 py-5">Wallet Address</th>
-                    <th className="px-6 py-5">Purchase Amount</th>
-                    <th className="px-6 py-5">Reward Earned</th>
-                    <th className="px-6 sm:px-8 py-5 text-right">Date Joined</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {referredUsers.map((user, i) => (
-                    <tr key={i} className="group hover:bg-white/[0.015] transition-colors">
-                      <td className="px-6 sm:px-8 py-6 font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">{user.wallet}</td>
-                      <td className="px-6 py-6 text-sm font-bold text-foreground">{user.amount}</td>
-                      <td className="px-6 py-6 text-sm font-bold text-acid-lime">{user.reward}</td>
-                      <td className="px-6 sm:px-8 py-6 text-sm text-muted-foreground text-right">{user.date}</td>
+              {referredInvestors.length === 0 ? (
+                <div className="p-12 text-center text-sm text-muted-foreground">
+                  You haven't referred any investors yet. Share your referral link to earn rewards!
+                </div>
+              ) : (
+                <table className="w-full text-left min-w-[600px] lg:min-w-full">
+                  <thead className="bg-white/[0.01] text-[10px] uppercase tracking-widest text-muted-foreground font-bold border-b border-white/5">
+                    <tr>
+                      <th className="px-6 sm:px-8 py-5">Wallet Address</th>
+                      <th className="px-6 py-5">Purchase Amount</th>
+                      <th className="px-6 py-5">Reward Earned</th>
+                      <th className="px-6 sm:px-8 py-5 text-right">Date Joined</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {referredInvestors.map((user, i) => (
+                      <tr key={i} className="group hover:bg-white/[0.015] transition-colors">
+                        <td className="px-6 sm:px-8 py-6 font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors">
+                          {user.fullWallet}
+                        </td>
+                        <td className="px-6 py-6 text-sm font-bold text-foreground">{user.amount}</td>
+                        <td className="px-6 py-6 text-sm font-bold text-acid-lime">{user.reward}</td>
+                        <td className="px-6 sm:px-8 py-6 text-sm text-muted-foreground text-right">{user.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </section>
         </div>

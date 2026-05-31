@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Search, 
   Filter, 
@@ -8,21 +8,64 @@ import {
   MoreHorizontal, 
   ChevronLeft,
   ChevronRight,
-  User
+  User,
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
-
-const investors = [
-  { id: 1, wallet: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$12,500", tokens: "2,500,000", network: "BSC", status: "Verified", date: "2026-05-24" },
-  { id: 2, wallet: "0x250F29d8EC2ab88b098defB751B7401B5f6d8976F", amount: "$5,000", tokens: "1,000,000", network: "ETH", status: "Verified", date: "2026-05-23" },
-  { id: 3, wallet: "0x9aC7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$42,000", tokens: "8,400,000", network: "BSC", status: "Pending", date: "2026-05-22" },
-  { id: 4, wallet: "0x12C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$1,200", tokens: "240,000", network: "ETH", status: "Verified", date: "2026-05-21" },
-  { id: 5, wallet: "0x56C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$8,900", tokens: "1,780,000", network: "BSC", status: "Flagged", date: "2026-05-20" },
-  { id: 6, wallet: "0x34C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$15,000", tokens: "3,000,000", network: "ETH", status: "Verified", date: "2026-05-19" },
-  { id: 7, wallet: "0x89C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "$2,500", tokens: "500,000", network: "BSC", status: "Verified", date: "2026-05-18" },
-];
 
 export default function InvestorsTab() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [investors, setInvestors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [actionMenuOpen, setActionMenuOpen] = useState(null);
+
+  const fetchInvestors = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/admin/investors?search=${searchTerm}&status=${statusFilter}`, {
+        headers: {
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        }
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setInvestors(data.investors);
+      }
+    } catch (err) {
+      console.error("Failed to load admin investors list:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (wallet, newStatus) => {
+    try {
+      const res = await fetch("/api/admin/investors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        },
+        body: JSON.stringify({
+          walletAddress: wallet,
+          status: newStatus
+        })
+      });
+      const resData = await res.json();
+      if (resData.ok) {
+        fetchInvestors();
+        setActionMenuOpen(null);
+      }
+    } catch (err) {
+      console.error("Failed to update investor verification status:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvestors();
+  }, [searchTerm, statusFilter]);
 
   return (
     <div className="space-y-6">
@@ -39,13 +82,27 @@ export default function InvestorsTab() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-surface/50 px-4 py-2.5 text-sm font-medium text-foreground backdrop-blur-xl transition-all hover:bg-white/5">
-            <Filter size={18} />
-            Filters
-          </button>
-          <button className="flex items-center gap-2 rounded-xl bg-acid-lime px-4 py-2.5 text-sm font-bold text-black shadow-[0_0_15px_rgba(204,255,0,0.2)] transition-all hover:opacity-90">
-            <Download size={18} />
-            Export
+          <div className="flex items-center gap-1 bg-surface/50 rounded-xl border border-white/10 px-2 py-1 backdrop-blur-xl">
+            {["All", "Verified", "Pending", "Flagged"].map((st) => (
+              <button
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                  statusFilter === st 
+                    ? "bg-acid-lime/10 text-acid-lime" 
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+          <button 
+            onClick={fetchInvestors}
+            className="flex items-center gap-2 rounded-xl bg-acid-lime px-4 py-2.5 text-sm font-bold text-black shadow-[0_0_15px_rgba(204,255,0,0.2)] transition-all hover:opacity-90"
+          >
+            <RefreshCw size={18} />
+            Reload
           </button>
         </div>
       </div>
@@ -53,76 +110,102 @@ export default function InvestorsTab() {
       {/* Table Section */}
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-surface/50 backdrop-blur-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="border-b border-white/5 bg-white/[0.02] text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="px-6 py-4">Investor Wallet</th>
-                <th className="px-6 py-4">Invested Amount</th>
-                <th className="px-6 py-4">BRX Allocation</th>
-                <th className="px-6 py-4">Network</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {investors.map((investor) => (
-                <tr key={investor.id} className="group transition-colors hover:bg-white/[0.02]">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-acid-lime">
-                        <User size={14} />
-                      </div>
-                      <span className="font-mono text-xs text-foreground">
-                        {investor.wallet.slice(0, 6)}...{investor.wallet.slice(-4)}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-foreground">{investor.amount}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-acid-lime">{investor.tokens} BRX</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-xs font-medium text-muted-foreground">{investor.network}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                      investor.status === 'Verified' ? 'bg-emerald-400/10 text-emerald-400' : 
-                      investor.status === 'Pending' ? 'bg-acid-lime/10 text-acid-lime' : 
-                      'bg-rose-400/10 text-rose-400'
-                    }`}>
-                      {investor.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-xs text-muted-foreground">{investor.date}</span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="rounded-lg p-2 text-muted-foreground transition-all hover:bg-white/5 hover:text-foreground">
-                      <MoreHorizontal size={18} />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-16 text-center">
+              <RefreshCw className="h-8 w-8 text-acid-lime animate-spin mx-auto mb-3" />
+              <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Fetching Investors...</span>
+            </div>
+          ) : investors.length === 0 ? (
+            <div className="p-16 text-center text-sm text-muted-foreground">
+              No matching investor records found in database.
+            </div>
+          ) : (
+            <table className="w-full text-left">
+              <thead className="border-b border-white/5 bg-white/[0.02] text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="px-6 py-4">Investor Wallet</th>
+                  <th className="px-6 py-4">Invested Amount</th>
+                  <th className="px-6 py-4">BRX Allocation</th>
+                  <th className="px-6 py-4">Network</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Joined Date</th>
+                  <th className="px-6 py-4 text-right">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {investors.map((investor) => (
+                  <tr key={investor.id} className="group transition-colors hover:bg-white/[0.02] relative">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-acid-lime">
+                          <User size={14} />
+                        </div>
+                        <span className="font-mono text-xs text-foreground select-all">
+                          {investor.wallet}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-bold text-foreground">{investor.amount}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-medium text-acid-lime">{investor.tokens} BRX</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-xs font-medium text-muted-foreground">{investor.network}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        investor.status === 'Verified' ? 'bg-emerald-400/10 text-emerald-400' : 
+                        investor.status === 'Pending' ? 'bg-acid-lime/10 text-acid-lime' : 
+                        'bg-rose-400/10 text-rose-400'
+                      }`}>
+                        {investor.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-xs text-muted-foreground">{investor.date}</span>
+                    </td>
+                    <td className="px-6 py-4 text-right relative">
+                      <div className="flex justify-end items-center gap-1.5">
+                        <button 
+                          onClick={() => setActionMenuOpen(actionMenuOpen === investor.wallet ? null : investor.wallet)}
+                          className="rounded-lg p-2 text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all"
+                        >
+                          <MoreHorizontal size={18} />
+                        </button>
+                        
+                        {actionMenuOpen === investor.wallet && (
+                          <div className="absolute right-6 top-12 z-30 w-36 rounded-xl border border-white/10 bg-[#0e0e12] p-1.5 shadow-2xl backdrop-blur-xl text-left">
+                            <p className="text-[8px] uppercase tracking-widest text-muted-foreground/60 px-2.5 py-1.5 font-bold">Verification Actions</p>
+                            {["Verified", "Pending", "Flagged"].map((op) => (
+                              <button
+                                key={op}
+                                onClick={() => handleUpdateStatus(investor.wallet, op)}
+                                className="w-full text-xs font-semibold px-2.5 py-1.5 rounded-lg text-foreground hover:bg-white/5 hover:text-acid-lime transition-colors flex items-center gap-2"
+                              >
+                                <span className={`h-1.5 w-1.5 rounded-full ${
+                                  op === 'Verified' ? 'bg-emerald-400' : op === 'Pending' ? 'bg-acid-lime' : 'bg-rose-400'
+                                }`} />
+                                {op}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination Info */}
         <div className="flex items-center justify-between border-t border-white/5 bg-white/[0.01] px-6 py-4">
           <p className="text-xs text-muted-foreground">
-            Total Investors: <span className="font-bold text-foreground">12,842</span>
+            Total Investors in Registry: <span className="font-bold text-foreground">{investors.length}</span>
           </p>
-          <div className="flex items-center gap-2">
-            <button className="rounded-lg border border-white/5 p-2 text-muted-foreground transition-all hover:bg-white/5">
-              <ChevronLeft size={18} />
-            </button>
-            <button className="rounded-lg border border-white/5 p-2 text-muted-foreground transition-all hover:bg-white/5">
-              <ChevronRight size={18} />
-            </button>
-          </div>
         </div>
       </div>
     </div>

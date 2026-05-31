@@ -1,25 +1,45 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { 
   Users, 
   Gift, 
   TrendingUp, 
- Wallet,
+  Wallet,
   ExternalLink,
   Search,
-  Filter
+  Filter,
+  RefreshCw
 } from "lucide-react";
 
-const referrers = [
-  { id: 1, wallet: "0x71C7...8976", referrals: 142, volume: "$284,500", rewards: "56,900 BRX" },
-  { id: 2, wallet: "0x250F...d8EC", referrals: 98, volume: "$142,000", rewards: "28,400 BRX" },
-  { id: 3, wallet: "0x9aC7...656E", referrals: 76, volume: "$115,200", rewards: "23,040 BRX" },
-  { id: 4, wallet: "0x12C7...56EC", referrals: 64, volume: "$98,400", rewards: "19,680 BRX" },
-  { id: 5, wallet: "0x56C7...E7ab", referrals: 52, volume: "$74,100", rewards: "14,820 BRX" },
-];
-
 export default function ReferralsTab() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [referrers, setReferrers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchReferrers = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/admin/referrals?search=${searchTerm}`, {
+        headers: {
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        }
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setReferrers(data.referrers);
+      }
+    } catch (err) {
+      console.error("Failed to fetch referrers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReferrers();
+  }, [searchTerm]);
+
   return (
     <div className="space-y-6">
       {/* Referrer Table */}
@@ -30,49 +50,61 @@ export default function ReferralsTab() {
             <input 
               type="text" 
               placeholder="Search referrers..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-9 w-full rounded-lg border border-white/10 bg-surface/50 pl-9 pr-4 text-xs focus:border-acid-lime/30 focus:outline-none"
             />
           </div>
-          <button className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-white/10">
-            <Filter size={14} />
-            Filters
+          <button 
+            onClick={fetchReferrers}
+            className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-foreground hover:bg-white/10"
+          >
+            <RefreshCw size={14} />
+            Reload
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="px-6 py-4">Referrer Wallet</th>
-                <th className="px-6 py-4">Total Referrals</th>
-                <th className="px-6 py-4">Purchase Volume</th>
-                <th className="px-6 py-4">Rewards</th>
-                <th className="px-6 py-4 text-right">Link</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {referrers.map((ref) => (
-                <tr key={ref.id} className="group transition-colors hover:bg-white/[0.02]">
-                  <td className="px-6 py-4">
-                    <span className="font-mono text-xs font-medium text-foreground group-hover:text-acid-lime transition-colors">{ref.wallet}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-foreground">{ref.referrals}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-emerald-400">{ref.volume}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-acid-lime">{ref.rewards}</span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="rounded-lg p-2 text-muted-foreground hover:text-foreground transition-all">
-                      <ExternalLink size={16} />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-16 text-center">
+              <RefreshCw className="h-8 w-8 text-acid-lime animate-spin mx-auto mb-3" />
+              <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Querying Referrals Ledger...</span>
+            </div>
+          ) : referrers.length === 0 ? (
+            <div className="p-16 text-center text-sm text-muted-foreground">
+              No matching referrer analytics found in database.
+            </div>
+          ) : (
+            <table className="w-full text-left">
+              <thead className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="px-6 py-4">Referrer Wallet</th>
+                  <th className="px-6 py-4">Total Referrals</th>
+                  <th className="px-6 py-4">Purchase Volume</th>
+                  <th className="px-6 py-4">Rewards</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {referrers.map((ref) => (
+                  <tr key={ref.id} className="group transition-colors hover:bg-white/[0.02]">
+                    <td className="px-6 py-4">
+                      <span className="font-mono text-xs font-medium text-foreground group-hover:text-acid-lime transition-colors select-all">
+                        {ref.wallet}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-bold text-foreground">{ref.referrals}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-medium text-emerald-400">{ref.volume}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-bold text-acid-lime">{ref.rewards}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

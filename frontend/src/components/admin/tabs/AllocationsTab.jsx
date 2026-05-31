@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Search, 
   Download, 
@@ -8,19 +8,42 @@ import {
   CheckCircle2, 
   Clock, 
   Wallet,
-  MoreHorizontal
+  MoreHorizontal,
+  RefreshCw,
+  AlertCircle
 } from "lucide-react";
-
-const allocations = [
-  { id: 1, wallet: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "2,500,000", status: "Distributed", date: "2026-05-24" },
-  { id: 2, wallet: "0x250F29d8EC2ab88b098defB751B7401B5f6d8976F", amount: "1,000,000", status: "Pending", date: "2026-05-23" },
-  { id: 3, wallet: "0x9aC7656EC7ab88b098defB751B7401B5f6d8976F", amount: "8,400,000", status: "Pending", date: "2026-05-22" },
-  { id: 4, wallet: "0x12C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "240,000", status: "Distributed", date: "2026-05-21" },
-  { id: 5, wallet: "0x56C7656EC7ab88b098defB751B7401B5f6d8976F", amount: "1,780,000", status: "Pending", date: "2026-05-20" },
-];
 
 export default function AllocationsTab() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [allocations, setAllocations] = useState([]);
+  const [totalDistributed, setTotalDistributed] = useState("0 BRX");
+  const [totalPending, setTotalPending] = useState("0 BRX");
+  const [loading, setLoading] = useState(true);
+
+  const fetchAllocations = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/admin/allocations?search=${searchTerm}`, {
+        headers: {
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        }
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setAllocations(data.allocations);
+        setTotalDistributed(data.totalDistributed);
+        setTotalPending(data.totalPending);
+      }
+    } catch (err) {
+      console.error("Failed to load allocations data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllocations();
+  }, [searchTerm]);
 
   return (
     <div className="space-y-6">
@@ -28,25 +51,12 @@ export default function AllocationsTab() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="p-6 rounded-2xl border border-white/10 bg-surface/50 backdrop-blur-xl">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Total Distributed</p>
-          <p className="text-2xl font-bold text-emerald-400">412,500,000 BRX</p>
+          <p className="text-2xl font-bold text-emerald-400">{totalDistributed}</p>
         </div>
         <div className="p-6 rounded-2xl border border-white/10 bg-surface/50 backdrop-blur-xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Pending Distribution</p>
-          <p className="text-2xl font-bold text-acid-lime">124,700,000 BRX</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Pending Claims</p>
+          <p className="text-2xl font-bold text-acid-lime">{totalPending}</p>
         </div>
-      </div>
-
-      {/* Action Bar */}
-      <div className="p-6 rounded-2xl border border-acid-lime/20 bg-acid-lime/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-xl bg-acid-lime text-black flex items-center justify-center">
-            <Send size={20} />
-          </div>
-          <p className="text-sm font-bold text-foreground">Manual Distribution Mode</p>
-        </div>
-        <button className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-acid-lime text-black font-bold text-sm shadow-[0_0_15px_rgba(204,255,0,0.2)]">
-          Distribute All Pending
-        </button>
       </div>
 
       {/* Table */}
@@ -56,56 +66,65 @@ export default function AllocationsTab() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input 
               type="text" 
-              placeholder="Filter wallet..." 
+              placeholder="Filter wallet address..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-surface border border-white/10 rounded-lg text-xs focus:outline-none"
+              className="w-full pl-9 pr-4 py-2 bg-surface border border-white/10 rounded-lg text-xs focus:outline-none focus:border-acid-lime/30"
             />
           </div>
-          <button className="p-2 text-muted-foreground hover:text-foreground">
-            <Download size={18} />
+          <button 
+            onClick={fetchAllocations}
+            className="p-2 text-muted-foreground hover:text-foreground transition-all flex items-center gap-1.5 text-xs font-semibold"
+          >
+            <RefreshCw size={14} className="animate-spin" style={{ animationDuration: "3s" }} />
+            Reload
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-b border-white/5">
-              <tr>
-                <th className="px-6 py-4">Wallet</th>
-                <th className="px-6 py-4">Allocation</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {allocations.map((item) => (
-                <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="px-6 py-4">
-                    <span className="font-mono text-xs text-foreground">{item.wallet}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-foreground">{item.amount} BRX</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase ${
-                      item.status === 'Distributed' ? 'text-emerald-400' : 'text-acid-lime'
-                    }`}>
-                      {item.status === 'Distributed' ? <CheckCircle2 size={12} /> : <Clock size={12} />}
-                      {item.status}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-xs text-muted-foreground">{item.date}</span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button className="text-muted-foreground hover:text-foreground">
-                      <MoreHorizontal size={18} />
-                    </button>
-                  </td>
+          {loading ? (
+            <div className="p-16 text-center">
+              <RefreshCw className="h-8 w-8 text-acid-lime animate-spin mx-auto mb-3" />
+              <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Querying Allocations Ledger...</span>
+            </div>
+          ) : allocations.length === 0 ? (
+            <div className="p-16 text-center text-sm text-muted-foreground">
+              No matching token allocations recorded in database.
+            </div>
+          ) : (
+            <table className="w-full text-left">
+              <thead className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-b border-white/5">
+                <tr>
+                  <th className="px-6 py-4">Wallet</th>
+                  <th className="px-6 py-4">Allocation</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Capture Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {allocations.map((item) => (
+                  <tr key={item.id} className="hover:bg-white/[0.02] transition-colors">
+                    <td className="px-6 py-4">
+                      <span className="font-mono text-xs text-foreground select-all">{item.wallet}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-bold text-foreground">{item.amount} BRX</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase ${
+                        item.status === 'Distributed' ? 'text-emerald-400' : item.status === 'Pending' ? 'text-acid-lime' : 'text-rose-400'
+                      }`}>
+                        {item.status === 'Distributed' ? <CheckCircle2 size={12} /> : item.status === 'Pending' ? <Clock size={12} /> : <AlertCircle size={12} />}
+                        {item.status}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-xs text-muted-foreground">{item.date}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>

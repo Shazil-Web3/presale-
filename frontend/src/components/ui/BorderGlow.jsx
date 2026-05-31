@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect, useState } from 'react';
 import './BorderGlow.css';
 
 function parseHSL(hslStr) {
@@ -100,8 +100,8 @@ const BorderGlow = ({
     // Use requestAnimationFrame for smoother updates and to avoid layout thrashing
     requestAnimationFrame(() => {
       const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
 
       const angle = getCursorAngle(card, x, y);
       const proximity = getEdgeProximity(card, x, y);
@@ -123,7 +123,7 @@ const BorderGlow = ({
     animateValue({ ease: easeInCubic, duration: 1500, end: 50, onUpdate: v => {
       card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`);
     }});
-    animateValue({ ease: easeOutCubic, delay: 1500, duration: 2250, start: 50, end: 100, onUpdate: v => {
+    animateValue({ ease: easeOutCubic, duration: 2250, delay: 1500, start: 50, end: 100, onUpdate: v => {
       card.style.setProperty('--cursor-angle', `${(angleEnd - angleStart) * (v / 100) + angleStart}deg`);
     }});
     animateValue({ ease: easeInCubic, delay: 2500, duration: 1500, start: 100, end: 0, 
@@ -138,6 +138,7 @@ const BorderGlow = ({
     <div
       ref={cardRef}
       onPointerMove={handlePointerMove}
+      onTouchMove={handlePointerMove}
       className={`border-glow-card ${className}`}
       style={{
         '--card-bg': backgroundColor,

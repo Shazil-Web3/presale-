@@ -9,18 +9,23 @@ export const MouseProvider = ({ children }) => {
   const rafId = useRef(null);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMove = (e) => {
       if (rafId.current) return;
       
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
       rafId.current = requestAnimationFrame(() => {
-        setPosition({ x: e.clientX, y: e.clientY });
+        setPosition({ x: clientX, y: clientY });
         rafId.current = null;
       });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("touchmove", handleMove);
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("touchmove", handleMove);
       if (rafId.current) cancelAnimationFrame(rafId.current);
     };
   }, []);

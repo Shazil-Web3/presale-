@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Plus, 
@@ -8,41 +9,9 @@ import {
   Trash2, 
   Layers,
   Zap,
-  Clock
+  RefreshCw,
+  Play
 } from "lucide-react";
-
-const stages = [
-  { 
-    id: 1, 
-    name: "Private Sale", 
-    price: "$0.002", 
-    hardCap: "$1,000,000", 
-    raised: "$1,000,000", 
-    progress: 100, 
-    status: "Completed",
-    date: "Jan 01 - Jan 31"
-  },
-  { 
-    id: 2, 
-    name: "ICO Phase 1", 
-    price: "$0.005", 
-    hardCap: "$6,000,000", 
-    raised: "$4,285,910", 
-    progress: 71.4, 
-    status: "Active",
-    date: "Feb 01 - Jun 30"
-  },
-  { 
-    id: 3, 
-    name: "ICO Phase 2", 
-    price: "$0.008", 
-    hardCap: "$10,000,000", 
-    raised: "$0", 
-    progress: 0, 
-    status: "Upcoming",
-    date: "Jul 01 - Oct 31"
-  },
-];
 
 const DynamicAmount = ({ amount, className }) => {
   const length = amount.length;
@@ -52,7 +21,6 @@ const DynamicAmount = ({ amount, className }) => {
     width: '100%'
   };
   
-  // More aggressive scaling for very long numbers
   if (length > 18) {
     scaleStyle.fontSize = '0.55em';
   } else if (length > 15) {
@@ -71,6 +39,71 @@ const DynamicAmount = ({ amount, className }) => {
 };
 
 export default function StagesTab() {
+  const [stages, setStages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStages = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/admin/stages", {
+        headers: {
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        }
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setStages(data.stages);
+      }
+    } catch (err) {
+      console.error("Failed to fetch presale stages:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleStage = async (stageId, currentlyActive) => {
+    try {
+      const res = await fetch("/api/admin/stages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": process.env.NEXT_PUBLIC_ADMIN_STAGE_API_KEY
+        },
+        body: JSON.stringify({
+          stageId,
+          isActive: !currentlyActive
+        })
+      });
+      const resData = await res.json();
+      if (resData.ok) {
+        fetchStages();
+      }
+    } catch (err) {
+      console.error("Failed to toggle stage status:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchStages();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[40vh] flex flex-col items-center justify-center gap-4">
+        <RefreshCw className="h-8 w-8 text-acid-lime animate-spin" />
+        <span className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Querying Phase Ledger...</span>
+      </div>
+    );
+  }
+
+  const activeStage = stages.find((st) => st.status === "Active") || {
+    name: "No Active Stage",
+    price: "$0.0000",
+    hardCap: "$0.00",
+    raised: "$0.00",
+    progress: 0
+  };
+
   return (
     <div className="space-y-8">
       {/* Header with Controls */}
@@ -80,13 +113,12 @@ export default function StagesTab() {
           <p className="text-sm text-muted-foreground">Manage ICO stages and token pricing.</p>
         </div>
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-2.5 text-sm font-bold text-rose-400 hover:bg-rose-500/20 transition-all">
-            <Pause size={18} />
-            Stop Sale
-          </button>
-          <button className="flex items-center gap-2 rounded-xl bg-acid-lime px-4 py-2.5 text-sm font-bold text-black shadow-[0_0_15px_rgba(204,255,0,0.2)] transition-all hover:opacity-90">
-            <Plus size={18} />
-            Add Stage
+          <button 
+            onClick={fetchStages}
+            className="flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm font-bold text-foreground hover:bg-white/10 transition-all"
+          >
+            <RefreshCw size={18} />
+            Reload
           </button>
         </div>
       </div>
@@ -99,15 +131,15 @@ export default function StagesTab() {
               <span className="h-2 w-2 rounded-full bg-acid-lime animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-widest text-acid-lime">Active Stage</span>
             </div>
-            <h2 className="text-3xl font-black text-foreground">ICO Phase 1</h2>
+            <h2 className="text-3xl font-black text-foreground">{activeStage.name}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Price</p>
-                <p className="text-xl font-bold text-foreground">$0.005</p>
+                <p className="text-xl font-bold text-foreground">{activeStage.price}</p>
               </div>
               <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Hard Cap</p>
-                <DynamicAmount amount="$6,000,000" className="text-xl font-bold text-foreground" />
+                <DynamicAmount amount={activeStage.hardCap} className="text-xl font-bold text-foreground" />
               </div>
             </div>
           </div>
@@ -116,21 +148,17 @@ export default function StagesTab() {
               <div className="flex justify-between items-center text-sm font-bold">
                 <span className="text-foreground">Progress</span>
                 <div className="flex-1 text-right ml-2">
-                  <DynamicAmount amount="$4,285,910 raised" className="text-acid-lime" />
+                  <DynamicAmount amount={`${activeStage.raised} raised`} className="text-acid-lime" />
                 </div>
               </div>
               <div className="h-3 w-full rounded-full bg-white/5 overflow-hidden">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: "71.4%" }}
+                  animate={{ width: `${activeStage.progress}%` }}
                   className="h-full bg-acid-lime"
                 />
               </div>
             </div>
-            <button className="w-full flex items-center justify-center gap-2 rounded-xl bg-white/10 py-3 text-xs font-bold uppercase tracking-widest text-foreground hover:bg-white/20 transition-all">
-              <Edit3 size={16} />
-              Edit Active Stage
-            </button>
           </div>
         </div>
         <Zap className="absolute -bottom-8 -right-8 h-48 w-48 text-acid-lime/5 rotate-12 pointer-events-none" />
@@ -162,11 +190,21 @@ export default function StagesTab() {
                   <DynamicAmount amount={stage.hardCap} className="text-foreground font-bold" />
                 </div>
               </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-muted-foreground">Raised</span>
+                <span className="text-foreground font-bold">{stage.raised} ({stage.progress}%)</span>
+              </div>
             </div>
             <div className="flex gap-2">
-              <button className="flex-1 rounded-lg bg-white/5 py-2 text-[10px] font-bold uppercase tracking-widest text-foreground hover:bg-white/10">Edit</button>
-              <button className="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20">
-                <Trash2 size={14} />
+              <button 
+                onClick={() => handleToggleStage(stage.id, stage.status === "Active")}
+                className={`flex-1 rounded-lg py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${
+                  stage.status === "Active" 
+                    ? "bg-rose-500/10 text-rose-400 hover:bg-rose-500/20" 
+                    : "bg-acid-lime text-black hover:opacity-90 shadow-[0_0_10px_rgba(204,255,0,0.1)]"
+                }`}
+              >
+                {stage.status === "Active" ? "Pause" : "Activate"}
               </button>
             </div>
           </div>
